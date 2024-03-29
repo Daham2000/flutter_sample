@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "566710749077",
+    "project_id": "sample-app-96c54",
+    "storage_bucket": "sample-app-96c54.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566710749077:android:9c92e20f41bf8d8ae3989c",
+        "android_client_info": {
+          "package_name": "com.example.flu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1hqMPpCa-rlZMG9xwoFrZ8nO14W_H-wg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
