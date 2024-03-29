@@ -1,5 +1,6 @@
 import 'package:flu/bloc/NotificationCubit.dart';
-import 'package:flu/screens/HomePage/HomePage.dart';
+import 'package:flu/screens/LoginPage/login_page_provider.dart';
+import 'package:flu/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,13 +24,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: lightTheme, // Set the light theme as the default
+      darkTheme: darkTheme, // Set the dark theme
+      themeMode: ThemeMode.system, // Use system theme mode (light or dark)
       home: BlocProvider(
         create: (_) => NotificationCubit(),
-        child: const MyHomePage(title: 'Flutter Demo Home Page'),
+        child: const LoginPageProvider(),
       ),
     );
   }
