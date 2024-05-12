@@ -18,8 +18,8 @@ class ConnectionCubit extends Cubit<bool> {
 
   Future<void> checkConnection() async {
     StreamSubscription<List<ConnectivityResult>> subscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
-      emit(result == ConnectivityResult.none);
-      bool resu = (result != ConnectivityResult.none);
+      bool resu = !(result.contains(ConnectivityResult.none));
+      emit(resu);
       print(resu);
     });
   }
