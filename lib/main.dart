@@ -1,3 +1,4 @@
+import 'package:flu/bloc/ConnectionCubit.dart';
 import 'package:flu/bloc/NotificationCubit.dart';
 import 'package:flu/screens/LoginPage/login_page_provider.dart';
 import 'package:flu/services/auth_gate.dart';
@@ -29,8 +30,8 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme, // Set the dark theme
       themeMode: ThemeMode.system, // Use system theme mode (light or dark)
       home: BlocProvider(
-        create: (_) => NotificationCubit(),
-        child: const AuthGate(),
+        create: (_) => ConnectionCubit(),
+        child: AuthGate(),
       ),
     );
   }
