@@ -1,4 +1,8 @@
 import 'package:flu/bloc/NotificationCubit.dart';
+import 'package:flu/screens/HomePage/home_page_provider.dart';
+import 'package:flu/screens/RegisterUserPage/register_user_provider.dart';
+import 'package:flu/screens/RegisterUserPage/register_user_view.dart';
+import 'package:flu/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../db/models/notification.dart';
@@ -14,6 +18,9 @@ class _NotificationViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  AuthService _authService = AuthService();
+  String _errorMessage = '';
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -83,6 +90,7 @@ class _NotificationViewState extends State<LoginView> {
                             }
                             return null;
                           },
+                          style: TextStyle(color: Colors.grey),
                           decoration: InputDecoration(
                             labelText: 'Email',
                             labelStyle: TextStyle(color: Colors.grey),
@@ -105,6 +113,7 @@ class _NotificationViewState extends State<LoginView> {
                             return null;
                           },
                           obscureText: true,
+                          style: TextStyle(color: Colors.grey),
                           decoration: InputDecoration(
                             labelText: 'Password',
                             labelStyle: TextStyle(color: Colors.grey),
@@ -118,36 +127,65 @@ class _NotificationViewState extends State<LoginView> {
                   ),
                 ),
                 SizedBox(height: 30.0),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // Add login logic here
-                      }
-                    },
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 100.0, vertical: 20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
+                if (!_isLoading)
+                  Center(
+                    child: GestureDetector(
+                      onTap: () async {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            _isLoading = true;
+                            _errorMessage = "";
+                          });
+                          try {
+                            await _authService.signInWithEmailAndPassword(
+                                _emailController.value.text,
+                                _passwordController.value.text);
+                            print('Signed in successfully');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePageProvider()));
+                          } catch (e) {
+                            print('Failed to sign in: $e');
+                            setState(() {
+                              _errorMessage =
+                                  "Wrong Email or Password, try again.";
+                            });
+                          }
+                          setState(() {
+                            _isLoading =
+                                false; // Show loader when login is clicked
+                          });
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 100.0, vertical: 20.0),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                if (_isLoading) Center(child: CircularProgressIndicator()),
                 SizedBox(height: 20.0),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
                       // Add navigation logic here
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterUserPageProvider()));
                     },
                     child: Text(
                       'Don\'t have an account? Sign up',
@@ -158,6 +196,16 @@ class _NotificationViewState extends State<LoginView> {
                     ),
                   ),
                 ),
+                if (_errorMessage.isNotEmpty)
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        _errorMessage,
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
